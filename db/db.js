@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const uri = process.env.MONGO_URI;
+const uri = `mongodb+srv://${process.env.MONGO_USERNAME}:${MONGO_PASSWORD}@cluster.glwj2.mongodb.net/surface?retryWrites=true&w=majority`;
 
 const connectDB = async () => {
     try {
