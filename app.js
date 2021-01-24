@@ -29,8 +29,8 @@ app.use(
     session({
         name: NAME,
         secret: SECRET,
-        saveUninitialized: false,
-        resave: false,
+        saveUninitialized: true,
+        resave: true,
         cookie: {
             maxAge: max_age,
             sameSite: true,
