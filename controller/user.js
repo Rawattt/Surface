@@ -11,9 +11,10 @@ exports.dashboard = async (req, res) => {
         const id = req.session.user_id;
 
         let following = await Follow.find({ follower: id });
+        console.log(following);
         if (!following || following.length == 0) {
             const posts = await Post.aggregate([{ $sort: { datetime: -1 } }]);
-            res.json({ error: false, payload: { id, posts } });
+            return res.json({ error: false, payload: { id, posts } });
         }
 
         following = [...following, id];
@@ -29,44 +30,7 @@ exports.dashboard = async (req, res) => {
             { $match: { owner: { $in: allFollowing } } },
             { $sort: { datetime: -1 } }
         ]);
-        res.json({ payload: { id, posts } });
-
-        // for (const follo of tmp) {
-        //     followee.push(follow.followee);
-        // }
-
-        // let posts = await Post.aggregate([{ $match: { owner } }]);
-
-        // let posts = await Follow.aggregate([
-        //     { $match: { follower: mongoose.Types.ObjectId(id) } },
-        //     {
-        //         $lookup: {
-        //             from: Post.collection.name,
-        //             localField: 'followee',
-        //             foreignField: 'owner',
-        //             as: 'posts'
-        //         }
-        //     },
-        //     {
-        //         $replaceRoot: {
-        //             newRoot: {
-        //                 $mergeObjects: [
-        //                     { $arrayElemAt: ['$posts', 0] },
-        //                     '$$ROOT'
-        //                 ]
-        //             }
-        //         }
-        //     },
-        //     { $project: { posts: 0 } }
-        //     // { $unwind: { path: '$posts' } },
-        //     // { $sort: { 'posts.datatime': 1 } }
-        // ]);
-        // console.log(posts);
-
-        // if (posts.length == 0)
-        //     posts = await Post.aggregate([{ $sort: { datetime: -1 } }]);
-
-        //
+        return res.json({ payload: { id, posts } });
     } catch (error) {
         res.json({ error: true, errorMessage: error.message });
     }
@@ -103,7 +67,10 @@ exports.follow = async (req, res) => {
 
         const follower = new Follow({ follower: id, followee: user._id });
         await follower.save();
-        res.json({ errors: false });
+        let followers = await Follow.find({
+            followee: user._id
+        }).countDocuments();
+        return res.json({ error: false, followers });
     } catch (error) {
         console.log(error);
         res.json({ error: true, errorMessage: error.message });
@@ -132,7 +99,11 @@ exports.unfollow = async (req, res) => {
                 errorMessage: 'User does not exist'
             });
 
-        await Follow.deleteMany({ follower: req.session.user_id });
+        await Follow.deleteMany({ follower: id });
+        let followers = await Follow.find({
+            followee: user._id
+        }).countDocuments();
+        return res.json({ error: false, followers });
     } catch (error) {
         console.log(error);
         res.json({ error: true, errorMessage: error.message });
@@ -140,19 +111,23 @@ exports.unfollow = async (req, res) => {
 };
 
 // @desc      View profile
-// @route     GET api/v1/profile/:username
+// @route     GET api/v1/profile/:id
 // @access    Private
 exports.getProfile = async (req, res) => {
     try {
-        const { username } = req.params;
-        const profile = await User.findOne({ username });
+        const { id } = req.params;
+        console.log(id);
+        console.log(req.session.user_id);
+
+        const profile = await User.findById(id);
+
         if (!profile)
             return res.json({
                 error: true,
                 errorMessage: 'Profile does not exist'
             });
 
-        const posts = await Post.find({ owner: profile._id });
+        const posts = await Post.find({ owner: id });
 
         const following = await Follow.find({
             follower: profile._id
@@ -161,10 +136,53 @@ exports.getProfile = async (req, res) => {
             followee: profile._id
         }).countDocuments();
 
-        // let follow = await Follow.findOne({
-        //     follower: req.session.user_id,
-        //     followee: username
-        // });
+        let tmp = await Follow.findOne({
+            follower: req.session.user_id,
+            followee: id
+        });
+
+        let isFollowing = tmp ? true : false;
+
+        res.json({
+            error: false,
+            payload: {
+                name: profile.name,
+                username: profile.username,
+                posts,
+                following,
+                followers,
+                isFollowing
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        res.json({ error: true, errorMessage: error.message });
+    }
+};
+
+// @desc      My profile
+// @route     GET api/v1/profile/me
+// @access    Private
+exports.getMyProfile = async (req, res) => {
+    try {
+        const id = req.session.user_id;
+
+        const profile = await User.findById(id);
+
+        if (!profile)
+            return res.json({
+                error: true,
+                errorMessage: 'Profile does not exist'
+            });
+
+        const posts = await Post.find({ owner: id });
+
+        const following = await Follow.find({
+            follower: profile._id
+        }).countDocuments();
+        const followers = await Follow.find({
+            followee: profile._id
+        }).countDocuments();
 
         res.json({
             error: false,
@@ -176,5 +194,8 @@ exports.getProfile = async (req, res) => {
                 followers
             }
         });
-    } catch (error) {}
+    } catch (error) {
+        console.log(error);
+        res.json({ error: true, errorMessage: error.message });
+    }
 };

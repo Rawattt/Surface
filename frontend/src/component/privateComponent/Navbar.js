@@ -7,9 +7,15 @@ const Navbar = () => {
     const [user, dispatch] = useContext(StateContext);
     const history = useHistory();
     const signout = async () => {
-        await axios.post('/api/v1/auth/signout');
-        dispatch({ type: 'LOGOUT' });
-        history.push('/login');
+        try {
+            await axios.post('/api/v1/auth/signout');
+            dispatch({ type: 'LOGOUT' });
+            history.push('/login');
+        } catch (error) {
+            console.log('error in signout');
+            dispatch({ type: 'LOGOUT' });
+            history.push('/login');
+        }
     };
     return (
         <nav className='navbar navbar-expand-lg navbar-dark bg-dark'>
@@ -34,8 +40,8 @@ const Navbar = () => {
             >
                 <ul className='navbar-nav mr-auto'>
                     <li className='nav-item'>
-                        <Link className='nav-link' to='/dashboards'>
-                            Profile
+                        <Link className='nav-link' to={`/profile/${user.id}`}>
+                            {user.username}
                         </Link>
                     </li>
                     <li className='nav-item'>

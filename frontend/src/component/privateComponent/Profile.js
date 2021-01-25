@@ -1,24 +1,97 @@
-import React, { useContext, useEffect } from 'react';
-import { StateContext } from '../StateProvider';
 import axios from 'axios';
-
-const getProfile = async () => {
-    const res = await axios.get('/user/profile/me');
-    return res.data;
-};
+import React, { useContext, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { StateContext } from '../StateProvider';
 
 const Profile = () => {
-    const [user, setUser] = useContext(StateContext);
+    const [user, dispatch] = useContext(StateContext);
+    const { id } = useParams();
+
     useEffect(() => {
-        setUser({ ...user, loading: true });
-        let data = getProfile();
-        setUser({ ...user, loading: false });
-        console.log(data);
-    });
+        const fetchUser = async () => {
+            dispatch({ type: 'LOADING' });
+            const { data } = await axios.get(`/api/v1/profile/${id}`);
+            dispatch({ type: 'STOP_LOADING' });
+            console.log(data);
+            dispatch({ type: 'SET_PROFILE', payload: { ...data.payload } });
+        };
+        fetchUser();
+    }, [dispatch, id]);
+
+    const followHandler = async () => {
+        try {
+            dispatch({ type: 'LOADING' });
+            const res = await axios.post(
+                `/api/v1/follow/${user.profile.username}`
+            );
+            dispatch({ type: 'STOP_LOADING' });
+            if (res.data.error) throw new Error(res.data.errorMessage);
+            else {
+                dispatch({
+                    type: 'SET_PROFILE',
+                    payload: {
+                        followers: res.data.followers,
+                        isFollowing: true
+                    }
+                });
+            }
+        } catch (error) {
+            dispatch({ type: 'ERROR', payload: error.message });
+            setTimeout(() => {
+                dispatch({ type: 'REMOVE_ERROR' });
+            }, 2000);
+        }
+    };
+    const unfollowHandler = async () => {
+        try {
+            dispatch({ type: 'LOADING' });
+            const res = await axios.post(
+                `/api/v1/unfollow/${user.profile.username}`
+            );
+            dispatch({ type: 'STOP_LOADING' });
+            if (res.data.error) throw new Error(res.data.errorMessage);
+            else {
+                dispatch({
+                    type: 'SET_PROFILE',
+                    payload: {
+                        followers: res.data.followers,
+                        isFollowing: false
+                    }
+                });
+            }
+        } catch (error) {
+            dispatch({ type: 'ERROR', payload: error.message });
+            setTimeout(() => {
+                dispatch({ type: 'REMOVE_ERROR' });
+            }, 2000);
+        }
+    };
+
     return (
-        <>
-            <div>Profile</div>
-        </>
+        <div>
+            <Link to='/dashboard' className='btn btn-primary'>
+                Dashboard
+            </Link>
+            <div>
+                <h3>{user.profile.name}</h3>
+                <h3>{user.profile.username}</h3>
+                <h5>Followers: {user.profile.followers}</h5>
+                <h5>Following: {user.profile.following}</h5>
+                {user.username === user.profile.username ? null : user.profile
+                      .isFollowing ? (
+                    <button
+                        className='btn btn-success'
+                        onClick={unfollowHandler}
+                    >
+                        Unfollow
+                    </button>
+                ) : (
+                    <button className='btn btn-dark' onClick={followHandler}>
+                        Follow
+                    </button>
+                )}
+            </div>
+        </div>
     );
 };
 

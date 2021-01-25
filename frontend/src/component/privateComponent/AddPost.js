@@ -21,11 +21,14 @@ const AddPost = () => {
                 }
             };
 
+            dispatch({ type: 'LOADING' });
             const { data } = await axios.post(
                 '/api/v1/post/create',
                 body,
                 config
             );
+
+            dispatch({ type: 'STOP_LOADING' });
 
             if (data.error) {
                 dispatch({ type: 'ERROR', payload: data.errorMessage });

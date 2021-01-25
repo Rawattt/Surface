@@ -10,6 +10,8 @@ import Public from './utils/Public';
 import Error from './utils/Error';
 import Spinner from './utils/Spinner';
 import MainNav from './component/MainNav';
+import Profile from './component/privateComponent/Profile';
+import MyProfile from './component/privateComponent/MyProfile';
 
 function App() {
     return (
@@ -22,8 +24,8 @@ function App() {
                     <Public path='/login' component={Login} exact={true} />
                     <Public path='/signup' component={Signup} exact={true} />
                     <Public path='/' component={AllPosts} exact={true} />
-                    <Private path='/dashboard' component={Dashboard} />
-                    <Private path='/profile' component={Dashboard} />
+                    <Private path='/dashboard' component={Dashboard} exact />
+                    <Private path='/profile/:id' component={Profile} exact />
                 </Switch>
             </StateProvider>
         </Router>

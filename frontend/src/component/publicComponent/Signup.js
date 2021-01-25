@@ -26,7 +26,12 @@ const Signup = () => {
                     'Content-Type': 'application/json'
                 }
             };
+
+            dispatch({ type: 'LOADING' });
+
             const res = await axios.post('/api/v1/auth/signup', body, config);
+
+            dispatch({ type: 'STOP_LOADING' });
             if (res.data.error) {
                 dispatch({ type: 'ERROR', payload: res.data.errorMessage });
             } else {

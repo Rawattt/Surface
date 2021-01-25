@@ -11,7 +11,7 @@ const Dashboard = () => {
         const fetchPosts = async () => {
             dispatch({ type: 'LOADING' });
             const res = await axios.get('/api/v1/dashboard');
-            dispatch({ type: 'LOADING' });
+            dispatch({ type: 'STOP_LOADING' });
             console.log(res.data);
             if (res.data.error) {
                 dispatch({ type: 'AUTH_ERROR' });
@@ -24,7 +24,15 @@ const Dashboard = () => {
                 dispatch({ type: 'ADD_POST', payload: posts });
             }
         };
-        fetchPosts();
+        try {
+            fetchPosts();
+        } catch (error) {
+            console.log(error);
+            setTimeout(() => {
+                dispatch({ type: 'REMOVE_ERROR' });
+            }, 2000);
+            dispatch({ type: 'AUTH_ERROR' });
+        }
     }, [dispatch]);
 
     return (

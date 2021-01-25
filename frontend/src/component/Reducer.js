@@ -9,7 +9,8 @@ export const initialState = {
     posts: [],
     error: false,
     errorMessage: '',
-    loading: false
+    loading: false,
+    profile: {}
 };
 
 const reducer = (state = initialState, action) => {
@@ -27,7 +28,9 @@ const reducer = (state = initialState, action) => {
             return { ...state, ...action.payload, isAuth: true };
 
         case 'LOADING':
-            return { ...state, loading: !state.loading };
+            return { ...state, loading: true };
+        case 'STOP_LOADING':
+            return { ...state, loading: false };
 
         case 'LOGOUT':
         case 'AUTH_ERROR':
@@ -39,6 +42,12 @@ const reducer = (state = initialState, action) => {
 
         case 'REMOVE_ERROR':
             return { ...state, error: false, errorMessage: null };
+
+        case 'SET_PROFILE':
+            return {
+                ...state,
+                profile: { ...state.profile, ...action.payload }
+            };
 
         default:
             return state;

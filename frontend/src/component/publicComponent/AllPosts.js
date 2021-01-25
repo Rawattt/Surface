@@ -11,7 +11,7 @@ const AllPosts = () => {
             const res = await axios.get('/api/v1/post');
             const posts = res.data.posts;
             console.log(posts);
-            dispatch({ type: 'LOADING' });
+            dispatch({ type: 'STOP_LOADING' });
             dispatch({ type: 'SET_POST', payload: [...posts] });
         };
         fetchPosts();

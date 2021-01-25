@@ -26,7 +26,7 @@ const Login = () => {
 
         dispatch({ type: 'LOADING' });
         const res = await axios.post('/api/v1/auth/signin', body, config);
-        dispatch({ type: 'LOADING' });
+        dispatch({ type: 'STOP_LOADING' });
 
         console.log(res);
 

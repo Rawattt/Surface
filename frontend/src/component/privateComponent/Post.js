@@ -4,14 +4,16 @@ import { Link } from 'react-router-dom';
 import { StateContext } from '../StateProvider';
 import moment from 'moment';
 
-const Post = ({ _id, title, body, likes, datetime }) => {
+const Post = ({ _id, title, body, likes, datetime, owner }) => {
     const [user, dispatch] = useContext(StateContext);
 
     let liked = likes.indexOf(user.id) === -1;
 
     const likePost = async (id) => {
         try {
+            dispatch({ type: 'LOADING' });
             const res = await axios.post(`/api/v1/post/like/${id}`);
+            dispatch({ type: 'STOP_LOADING' });
 
             const { posts } = res.data.payload;
             dispatch({ type: 'SET_POST', payload: posts });
@@ -24,7 +26,10 @@ const Post = ({ _id, title, body, likes, datetime }) => {
     };
     const unlikePost = async (id) => {
         try {
+            dispatch({ type: 'LOADING' });
             const res = await axios.post(`/api/v1/post/unlike/${id}`);
+            dispatch({ type: 'STOP_LOADING' });
+
             console.log('res.data', res.data);
             const { posts } = res.data.payload;
             dispatch({ type: 'SET_POST', payload: posts });
@@ -59,7 +64,7 @@ const Post = ({ _id, title, body, likes, datetime }) => {
                         Unlike
                     </button>
                 )}
-                <Link to='/profile/_id'>Profile</Link>
+                <Link to={`/profile/${owner}`}>Profile</Link>
             </div>
         </div>
     );
