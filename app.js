@@ -52,8 +52,8 @@ app.use(
 // Sanitize data
 app.use(sanitize());
 
-//Set security headers
-app.use(helmet());
+// //Set security headers
+// app.use(helmet());
 
 // Prevent XSS attacks
 app.use(xss());
