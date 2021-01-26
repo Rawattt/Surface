@@ -17,36 +17,46 @@ import Home from './component/privateComponent/Home';
 
 function App() {
     return (
-        <Router>
-            <StateProvider>
-                <Error />
-                <Spinner />
-                <MainNav />
-                <Switch>
-                    <Public path='/login' component={Login} exact={true} />
-                    <Public path='/signup' component={Signup} exact={true} />
-                    <Public path='/' component={AllPosts} exact={true} />
-                    <Public path='/:page' component={AllPosts} exact={true} />
+        <div className='container'>
+            <Router>
+                <StateProvider>
+                    <Error />
+                    <Spinner />
+                    <MainNav />
+                    <Switch>
+                        <Public path='/login' component={Login} exact={true} />
+                        <Public
+                            path='/signup'
+                            component={Signup}
+                            exact={true}
+                        />
+                        <Public path='/' component={AllPosts} exact={true} />
+                        <Public
+                            path='/:page'
+                            component={AllPosts}
+                            exact={true}
+                        />
 
-                    <Private
-                        path='/dashboard/:page'
-                        component={Dashboard}
-                        exact={true}
-                    />
-                    <Private
-                        path='/profile/:id'
-                        component={Profile}
-                        exact={true}
-                    />
-                    <Private
-                        path='/post/:postId'
-                        component={FullPost}
-                        exact={true}
-                    />
-                    <Route path='/*' component={NotFound} />
-                </Switch>
-            </StateProvider>
-        </Router>
+                        <Private
+                            path='/dashboard/:page'
+                            component={Dashboard}
+                            exact={true}
+                        />
+                        <Private
+                            path='/profile/:id'
+                            component={Profile}
+                            exact={true}
+                        />
+                        <Private
+                            path='/post/:postId'
+                            component={FullPost}
+                            exact={true}
+                        />
+                        <Route path='/*' component={NotFound} />
+                    </Switch>
+                </StateProvider>
+            </Router>
+        </div>
     );
 }
 
