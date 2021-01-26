@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import axios from 'axios';
 import { StateContext } from '../StateProvider';
-import { useHistory } from 'react-router-dom';
+import { useHistory, withRouter } from 'react-router-dom';
 
 const Login = () => {
     const [user, dispatch] = useContext(StateContext);
@@ -38,8 +38,9 @@ const Login = () => {
                 payload: { id: _id, username, name }
             });
             localStorage.setItem('username', username);
-            localStorage.setItem('id', true);
-            return history.push('/dashboard');
+            localStorage.setItem('id', _id);
+            console.log('going to dashboard');
+            return history.push('/dashboard/1');
         } else {
             dispatch({ type: 'ERROR', payload: res.data.errorMessage });
             setTimeout(() => dispatch({ type: 'REMOVE_ERROR' }), 2000);
@@ -84,4 +85,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default withRouter(Login);

@@ -2,9 +2,10 @@ import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { StateContext } from '../StateProvider';
+import AddPost from './AddPost';
 import Post from './Post';
 
-const AllPosts = () => {
+const Home = () => {
     const [user, dispatch] = useContext(StateContext);
     const page = parseInt(useParams().page) || 1;
 
@@ -24,15 +25,9 @@ const AllPosts = () => {
 
     return (
         <>
+            <AddPost />
             {user.posts.map((post) => (
-                <Post
-                    key={post._id}
-                    id={post._id}
-                    title={post.title}
-                    body={post.body}
-                    likes={[...post.likes]}
-                    time={post.datetime}
-                />
+                <Post key={post._id} {...post} />
             ))}
             <nav aria-label='Page navigation example'>
                 <ul className='pagination'>
@@ -56,4 +51,4 @@ const AllPosts = () => {
     );
 };
 
-export default AllPosts;
+export default Home;

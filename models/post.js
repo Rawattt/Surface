@@ -20,11 +20,12 @@ const postSchema = mongoose.Schema({
         required: true,
         ref: 'User'
     },
-    likes: {
-        type: Array,
-        default: []
+    username: {
+        type: String,
+        required: true,
+        ref: 'User'
     },
-    comments: {
+    likes: {
         type: Array,
         default: []
     }

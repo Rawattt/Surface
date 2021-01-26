@@ -4,33 +4,43 @@ const User = require('../models/user');
 const mongoose = require('mongoose');
 
 // @desc      Dashboard
-// @route     GET /api/v1/dashboard
+// @route     GET /api/v1/dashboard/:page
 // @access    Private
 exports.dashboard = async (req, res) => {
     try {
         const id = req.session.user_id;
 
+        const page = req.params.page || 1;
+
         let following = await Follow.find({ follower: id });
+        let posts;
         console.log(following);
-        if (!following || following.length == 0) {
-            const posts = await Post.aggregate([{ $sort: { datetime: -1 } }]);
-            return res.json({ error: false, payload: { id, posts } });
+        if (!following || following.length === 0) {
+            posts = await Post.aggregate([{ $sort: { datetime: -1 } }]);
+        } else {
+            following = [...following];
+            console.log(following);
+
+            let allFollowing = [];
+
+            for (const followee of following) {
+                allFollowing.push(followee.followee);
+            }
+
+            allFollowing.push(mongoose.Types.ObjectId(id));
+
+            console.log(allFollowing);
+
+            posts = await Post.aggregate([
+                { $match: { owner: { $in: allFollowing } } },
+                { $sort: { datetime: -1 } }
+            ]);
         }
 
-        following = [...following, id];
-        console.log(following);
-
-        let allFollowing = [];
-
-        for (const followee of following) {
-            allFollowing.push(followee.followee);
-        }
-
-        let posts = await Post.aggregate([
-            { $match: { owner: { $in: allFollowing } } },
-            { $sort: { datetime: -1 } }
-        ]);
-        return res.json({ payload: { id, posts } });
+        let totalPosts = posts.length;
+        posts = posts.slice((parseInt(page) - 1) * 3, parseInt(page) * 3);
+        console.log(posts);
+        return res.json({ payload: { id, posts, totalPosts } });
     } catch (error) {
         res.json({ error: true, errorMessage: error.message });
     }
@@ -60,12 +70,17 @@ exports.follow = async (req, res) => {
 
         let isFollowing = await Follow.findOne({
             follower: id,
-            followee: user._id
+            followee: user.id
         });
         if (isFollowing)
             return res.json({ error: false, data: 'Already following' });
 
-        const follower = new Follow({ follower: id, followee: user._id });
+        const follower = new Follow({
+            follower: id,
+            followee: user._id,
+            followerUsername: req.session.username,
+            followeeUsername: username
+        });
         await follower.save();
         let followers = await Follow.find({
             followee: user._id
@@ -91,17 +106,13 @@ exports.unfollow = async (req, res) => {
                 errorMessage: 'User does not exist'
             });
 
-        const user = await User.findOne({ username });
-
-        if (!user)
-            return res.json({
-                error: true,
-                errorMessage: 'User does not exist'
-            });
-
-        await Follow.deleteMany({ follower: id });
+        let a = await Follow.deleteMany({
+            followerUsername: req.session.username,
+            followeeUsername: username
+        });
+        console.log(a);
         let followers = await Follow.find({
-            followee: user._id
+            followeeUsername: username
         }).countDocuments();
         return res.json({ error: false, followers });
     } catch (error) {
@@ -116,8 +127,6 @@ exports.unfollow = async (req, res) => {
 exports.getProfile = async (req, res) => {
     try {
         const { id } = req.params;
-        console.log(id);
-        console.log(req.session.user_id);
 
         const profile = await User.findById(id);
 
@@ -197,5 +206,37 @@ exports.getMyProfile = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.json({ error: true, errorMessage: error.message });
+    }
+};
+
+// @desc      Followers
+// @route     GET api/v1/followers/:id
+// @access    Private
+exports.myFollowers = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!id) throw new Error('Invalid request');
+
+        const followers = await Follow.find({ followee: id });
+        console.log(followers);
+        res.json(followers);
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+// @desc      Following
+// @route     GET api/v1/following/:id
+// @access    Private
+exports.myFollowees = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!id) throw new Error('Invalid request');
+
+        const followers = await Follow.find({ follower: id });
+        console.log(followers);
+        res.json(followers);
+    } catch (error) {
+        console.log(error);
     }
 };

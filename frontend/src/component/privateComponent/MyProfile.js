@@ -32,7 +32,7 @@ const MyProfile = () => {
     }, [dispatch]);
     return (
         <>
-            <Link to='/dashboard' className='btn btn-primary'>
+            <Link to='/dashboard/1' className='btn btn-primary'>
                 Dashboard
             </Link>
             <h3>{user.profile.name}</h3>

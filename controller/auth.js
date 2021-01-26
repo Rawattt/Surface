@@ -61,6 +61,7 @@ exports.userSignin = async (req, res) => {
         const user = await User.verifyCredentials(email, password);
 
         req.session.user_id = user._id;
+        req.session.username = user.username;
 
         const user_data = user.toJSON();
 
@@ -91,6 +92,7 @@ exports.userSignout = async (req, res) => {
             res.status(200).json({ error: false });
         });
     } catch (error) {
-        res.json({});
+        console.log(error);
+        res.json({ error: true });
     }
 };

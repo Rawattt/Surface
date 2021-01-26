@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { StateContext } from '../StateProvider';
 import moment from 'moment';
 
-const Post = ({ _id, title, body, likes, datetime, owner }) => {
+const Post = ({ _id, title, body, likes, datetime, owner, username }) => {
     const [user, dispatch] = useContext(StateContext);
 
     let liked = likes.indexOf(user.id) === -1;
@@ -43,11 +43,17 @@ const Post = ({ _id, title, body, likes, datetime, owner }) => {
     };
 
     return (
-        <div className='card my-2' id={_id}>
+        <div className='card my-2'>
             <div className='card-body'>
                 <h3 className='card-title'>{title}</h3>
                 <h5 className='card-text'>{body}</h5>
-                <p>{moment(datetime).format('MMMM Do YYYY, h:mm:ss a')}</p>
+                <h6>
+                    By <Link to={`/profile/${owner}`}>{username}</Link>
+                </h6>
+                <p>
+                    Posted on{' '}
+                    {moment(datetime).format('MMMM Do YYYY, h:mm:ss a')}
+                </p>
                 <span>{likes.length} likes</span>
                 {liked ? (
                     <button
@@ -64,7 +70,10 @@ const Post = ({ _id, title, body, likes, datetime, owner }) => {
                         Unlike
                     </button>
                 )}
-                <Link to={`/profile/${owner}`}>Profile</Link>
+
+                <Link to={`/post/${_id}`} className='mx-2'>
+                    <button className='btn btn-info my-2'>Full post</button>
+                </Link>
             </div>
         </div>
     );

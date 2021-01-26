@@ -40,7 +40,7 @@ const Signup = () => {
                     type: 'SIGNUP',
                     payload: { id: _id, username, name }
                 });
-                history.push('/dashboard');
+                history.push('/dashboard/1');
             }
         } catch (error) {
             dispatch({ type: 'ERROR', payload: error.message });

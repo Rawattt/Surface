@@ -1,8 +1,6 @@
-import { useHistory } from 'react-router-dom';
-
 export const initialState = {
     isAuth: localStorage.getItem('isAuth') || false,
-    id: null,
+    id: localStorage.getItem('id') || null,
     name: '',
     email: '',
     username: '',
@@ -10,7 +8,10 @@ export const initialState = {
     error: false,
     errorMessage: '',
     loading: false,
-    profile: {}
+    profile: {},
+    fullPost: {},
+    comments: [],
+    totalPosts: 10
 };
 
 const reducer = (state = initialState, action) => {
@@ -19,6 +20,9 @@ const reducer = (state = initialState, action) => {
         case 'DELETE_POST':
         case 'SET_POST':
             return { ...state, posts: [...action.payload] };
+
+        case 'LENGTH':
+            return { ...state, totalPosts: parseInt(action.payload) };
 
         case 'SET_USER':
         case 'LOGIN':
@@ -47,6 +51,19 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 profile: { ...state.profile, ...action.payload }
+            };
+
+        case 'FULL_POST':
+            console.log('Dispatching full post', action.payload);
+            return {
+                ...state,
+                fullPost: { ...action.payload }
+            };
+        case 'COMMENTS':
+            console.log('Dispatching full post', action.payload);
+            return {
+                ...state,
+                comments: [...action.payload]
             };
 
         default:

@@ -4,7 +4,7 @@ import AuthNavbar from './privateComponent/Navbar';
 import { StateContext } from './StateProvider';
 
 const MainNav = () => {
-    const [user, dispatch] = useContext(StateContext);
+    const [user] = useContext(StateContext);
     return user.isAuth ? <AuthNavbar /> : <Navbar />;
 };
 

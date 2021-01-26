@@ -9,11 +9,18 @@ const Profile = () => {
 
     useEffect(() => {
         const fetchUser = async () => {
-            dispatch({ type: 'LOADING' });
-            const { data } = await axios.get(`/api/v1/profile/${id}`);
-            dispatch({ type: 'STOP_LOADING' });
-            console.log(data);
-            dispatch({ type: 'SET_PROFILE', payload: { ...data.payload } });
+            try {
+                dispatch({ type: 'LOADING' });
+                const { data } = await axios.get(`/api/v1/profile/${id}`);
+                dispatch({ type: 'STOP_LOADING' });
+                console.log(data);
+                dispatch({ type: 'SET_PROFILE', payload: { ...data.payload } });
+            } catch (error) {
+                dispatch({ type: 'ERROR', payload: error.message });
+                setTimeout(() => {
+                    dispatch({ type: 'REMOVE_ERROR' });
+                }, 2000);
+            }
         };
         fetchUser();
     }, [dispatch, id]);
@@ -69,27 +76,38 @@ const Profile = () => {
 
     return (
         <div>
-            <Link to='/dashboard' className='btn btn-primary'>
-                Dashboard
+            <Link to='/dashboard/1' className='btn btn-primary my-3'>
+                Back to dashboard
             </Link>
             <div>
-                <h3>{user.profile.name}</h3>
-                <h3>{user.profile.username}</h3>
-                <h5>Followers: {user.profile.followers}</h5>
-                <h5>Following: {user.profile.following}</h5>
-                {user.username === user.profile.username ? null : user.profile
-                      .isFollowing ? (
-                    <button
-                        className='btn btn-success'
-                        onClick={unfollowHandler}
-                    >
-                        Unfollow
-                    </button>
-                ) : (
-                    <button className='btn btn-dark' onClick={followHandler}>
-                        Follow
-                    </button>
-                )}
+                <div className='card my-2'>
+                    <div className='card-body'>
+                        <h3 className='text-center'>{user.profile.name}</h3>
+                        <h3 className='text-center'>{user.profile.username}</h3>
+                        <h5 className='text-center'>
+                            Followers: {user.profile.followers}
+                        </h5>
+                        <h5 className='text-center'>
+                            Following: {user.profile.following}
+                        </h5>
+                        {user.username === user.profile.username ? null : user
+                              .profile.isFollowing ? (
+                            <button
+                                className='btn btn-success'
+                                onClick={unfollowHandler}
+                            >
+                                Unfollow
+                            </button>
+                        ) : (
+                            <button
+                                className='btn btn-dark'
+                                onClick={followHandler}
+                            >
+                                Follow
+                            </button>
+                        )}
+                    </div>
+                </div>
             </div>
         </div>
     );

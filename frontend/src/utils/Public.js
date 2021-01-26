@@ -8,7 +8,7 @@ const Public = ({ component: Component, ...rest }) => {
         <Route
             {...rest}
             render={() =>
-                user.isAuth ? <Redirect to='/dashboard' /> : <Component />
+                user.isAuth ? <Redirect to='/dashboard/1' /> : <Component />
             }
         />
     );

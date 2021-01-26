@@ -10,6 +10,16 @@ const followerSchema = mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'User',
         required: true
+    },
+    followerUsername: {
+        type: String,
+        ref: 'User',
+        required: true
+    },
+    followeeUsername: {
+        type: String,
+        ref: 'User',
+        required: true
     }
 });
 
