@@ -10,7 +10,7 @@
     "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon app.js",
-    "heroku-postbuild": "cd frontend && npm install && INLINE_RUNTIME_CHUNK=false && npm run build"
+    "heroku-postbuild": "cd frontend && npm install && npm run build"
   },
   "keywords": [],
   "author": "",
