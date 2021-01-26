@@ -75,7 +75,7 @@ const Profile = () => {
     };
 
     return (
-        <div>
+        <div className='bg-light p-5 rounded-lg m-3'>
             <Link to='/dashboard/1' className='btn btn-primary my-3'>
                 Back to dashboard
             </Link>

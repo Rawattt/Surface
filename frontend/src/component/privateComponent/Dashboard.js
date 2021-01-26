@@ -43,33 +43,37 @@ const Dashboard = () => {
 
     return (
         <>
-            <div>Dashboard</div>
-            <AddPost />
-            <AllPosts />
-            <nav aria-label='Page navigation example'>
-                <ul className='pagination'>
-                    {page && page > 1 && (
-                        <li className='page-item'>
-                            <button
-                                className='page-link'
-                                onClick={() => setPage(page - 1)}
-                            >
-                                Previous
-                            </button>
-                        </li>
-                    )}
-                    {parseInt(user.totalPosts) > parseInt(page) * 3 && (
-                        <li className='page-item'>
-                            <button
-                                className='page-link'
-                                onClick={() => setPage(page + 1)}
-                            >
-                                Next
-                            </button>
-                        </li>
-                    )}
-                </ul>
-            </nav>
+            <div className='bg-light px-5 py-1 rounded-lg m-3'>
+                <div>Dashboard</div>
+                <AddPost />
+            </div>
+            <div className='bg-light p-5 rounded-lg m-3'>
+                <AllPosts />
+                <nav aria-label='Page navigation example'>
+                    <ul className='pagination'>
+                        {page && page > 1 && (
+                            <li className='page-item'>
+                                <button
+                                    className='page-link'
+                                    onClick={() => setPage(page - 1)}
+                                >
+                                    Previous
+                                </button>
+                            </li>
+                        )}
+                        {parseInt(user.totalPosts) > parseInt(page) * 3 && (
+                            <li className='page-item'>
+                                <button
+                                    className='page-link'
+                                    onClick={() => setPage(page + 1)}
+                                >
+                                    Next
+                                </button>
+                            </li>
+                        )}
+                    </ul>
+                </nav>
+            </div>
         </>
     );
 };

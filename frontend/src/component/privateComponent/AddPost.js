@@ -52,7 +52,7 @@ const AddPost = () => {
     return (
         <div>
             <form className='my-2' onSubmit={(e) => submitHandler(e)}>
-                <div className='form-group'>
+                <div className='mb-3'>
                     <input
                         type='text'
                         name='title'
@@ -63,7 +63,7 @@ const AddPost = () => {
                         required
                     />
                 </div>
-                <div className='form-group'>
+                <div className='mb-3'>
                     <input
                         name='body'
                         type='text'

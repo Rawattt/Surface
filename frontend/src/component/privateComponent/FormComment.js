@@ -26,7 +26,7 @@ const FormComment = ({ id }) => {
     };
     return (
         <form className='my-2' onSubmit={(e) => submitHandler(e)}>
-            <div className='form-group'>
+            <div className='mb-3'>
                 <input
                     type='text'
                     name='body'

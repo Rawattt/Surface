@@ -20,49 +20,51 @@ const Navbar = () => {
     };
     return (
         <nav className='navbar navbar-expand-lg navbar-dark bg-dark'>
-            <Link className='navbar-brand' to='/dashboard/1'>
-                Surface
-            </Link>
-            <button
-                className='navbar-toggler'
-                type='button'
-                data-toggle='collapse'
-                data-target='#navbarSupportedContent'
-                aria-controls='navbarSupportedContent'
-                aria-expanded='false'
-                aria-label='Toggle navigation'
-            >
-                <span className='navbar-toggler-icon'></span>
-            </button>
+            <div className='container-fluid'>
+                <Link className='navbar-brand' to='/dashboard/1'>
+                    Surface
+                </Link>
+                <button
+                    className='navbar-toggler'
+                    type='button'
+                    data-bs-toggle='collapse'
+                    data-bs-target='#navbarSupportedContent'
+                    aria-controls='navbarSupportedContent'
+                    aria-expanded='false'
+                    aria-label='Toggle navigation'
+                >
+                    <span className='navbar-toggler-icon'></span>
+                </button>
 
-            <div
-                className='collapse navbar-collapse'
-                id='navbarSupportedContent'
-            >
-                <ul className='navbar-nav mr-auto'>
-                    <li className='nav-item'>
-                        <button className='btn btn-dark nav-link'>
-                            <Link
-                                style={{
-                                    textDecoration: 'none',
-                                    color: 'white'
-                                }}
-                                to={`/profile/${user.id}`}
+                <div
+                    className='collapse navbar-collapse'
+                    id='navbarSupportedContent'
+                >
+                    <ul className='navbar-nav mr-auto'>
+                        <li className='nav-item'>
+                            <button className='btn btn-dark nav-link'>
+                                <Link
+                                    style={{
+                                        textDecoration: 'none',
+                                        color: 'white'
+                                    }}
+                                    to={`/profile/${user.id}`}
+                                >
+                                    My Profile
+                                </Link>
+                            </button>
+                        </li>
+
+                        <li className='nav-item'>
+                            <button
+                                className='btn btn-dark nav-link'
+                                onClick={signout}
                             >
-                                My Profile
-                            </Link>
-                        </button>
-                    </li>
-
-                    <li className='nav-item'>
-                        <button
-                            className='btn btn-dark nav-link'
-                            onClick={signout}
-                        >
-                            Signout
-                        </button>
-                    </li>
-                </ul>
+                                Signout
+                            </button>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </nav>
     );

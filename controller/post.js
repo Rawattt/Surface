@@ -4,7 +4,7 @@ const Comment = require('../models/comment');
 const HttpError = require('http-errors');
 const Follower = require('../models/follow');
 const errorHandler = require('../utils/errorHandler');
-const qs = require('query-string');
+const mongoose = require('mongoose');
 
 // @desc      Make post
 // @route     POST /api/v1/post/create
@@ -117,16 +117,22 @@ exports.unlikePost = async (req, res) => {
 exports.fullPost = async (req, res) => {
     try {
         const { postId } = req.params;
+        console.log(postId);
 
         if (!postId) throw new Error('Invalid request');
 
         const post = await Post.findById(postId);
         if (!post) throw new Error('Post does not exist');
 
-        const comments = await Comment.find({ post: postId });
+        const comments = await Comment.aggregate([
+            { $match: { post: mongoose.Types.ObjectId(postId) } },
+            { $sort: { datetime: -1 } }
+        ]);
+        console.log(comments);
 
         res.status(200).json({ error: false, payload: { post, comments } });
     } catch (error) {
+        console.log(error);
         res.json({ error: true, errorMessage: error.message });
     }
 };
@@ -140,7 +146,6 @@ exports.putComment = async (req, res) => {
         const { body } = req.body;
         const username = req.session.username;
         console.log(body);
-        res.json({});
 
         if (!body) throw new Error('Please fill all fields');
 
@@ -159,7 +164,7 @@ exports.putComment = async (req, res) => {
 
         let comments = await Comment.find({ post: postId });
         console.log(comments);
-        return res.status(201).json({ error: false, comments: comments });
+        return res.redirect(`/api/v1/post/${postId}`);
     } catch (error) {
         console.log(error);
         return res.json({ error: true, errorMessage: error.message });

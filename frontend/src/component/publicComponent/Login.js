@@ -50,7 +50,7 @@ const Login = () => {
     return (
         <div>
             <form className='my-2' onSubmit={(e) => submitHandler(e)}>
-                <div className='form-group'>
+                <div className='mb-3'>
                     <label htmlFor='exampleInputEmail1'>Email address</label>
                     <input
                         type='email'
@@ -64,7 +64,7 @@ const Login = () => {
                         required
                     />
                 </div>
-                <div className='form-group'>
+                <div className='mb-3'>
                     <label htmlFor='exampleInputPassword1'>Password</label>
                     <input
                         name='password'

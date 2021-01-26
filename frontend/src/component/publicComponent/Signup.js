@@ -50,7 +50,7 @@ const Signup = () => {
     return (
         <div>
             <form onSubmit={(e) => submitHandler(e)}>
-                <div className='form-group'>
+                <div className='mb-3'>
                     <label>Name</label>
                     <input
                         type='text'
@@ -62,7 +62,7 @@ const Signup = () => {
                         required
                     />
                 </div>
-                <div className='form-group'>
+                <div className='mb-3'>
                     <label>username</label>
                     <input
                         type='test'
@@ -74,7 +74,7 @@ const Signup = () => {
                         required
                     />
                 </div>
-                <div className='form-group'>
+                <div className='mb-3'>
                     <label>Email address</label>
                     <input
                         type='email'
@@ -86,7 +86,7 @@ const Signup = () => {
                         required
                     />
                 </div>
-                <div className='form-group'>
+                <div className='mb-3'>
                     <label>Password</label>
                     <input
                         name='password'
