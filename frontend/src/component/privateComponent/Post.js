@@ -4,7 +4,16 @@ import { Link } from 'react-router-dom';
 import { StateContext } from '../StateProvider';
 import moment from 'moment';
 
-const Post = ({ _id, title, body, likes, datetime, owner, username }) => {
+const Post = ({
+    _id,
+    title,
+    body,
+    imageUrl,
+    likes,
+    datetime,
+    owner,
+    username
+}) => {
     const [user, dispatch] = useContext(StateContext);
 
     let liked = likes.indexOf(user.id) === -1;
@@ -47,6 +56,14 @@ const Post = ({ _id, title, body, likes, datetime, owner, username }) => {
             <div className='card-body'>
                 <h3 className='card-title'>{title}</h3>
                 <h5 className='card-text'>{body}</h5>
+                <img
+                    src={
+                        imageUrl ||
+                        'https://images.unsplash.com/photo-1609678816248-132228a8658b?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=750&q=80'
+                    }
+                    className='card-img-top'
+                    alt='User Post'
+                ></img>
                 <h6>
                     By <Link to={`/profile/${owner}`}>{username}</Link>
                 </h6>

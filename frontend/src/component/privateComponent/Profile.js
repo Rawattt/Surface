@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useContext, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { StateContext } from '../StateProvider';
+import Post from './Post';
 
 const Profile = () => {
     const [user, dispatch] = useContext(StateContext);
@@ -109,6 +110,9 @@ const Profile = () => {
                     </div>
                 </div>
             </div>
+            {user.profile.posts?.map((post) => (
+                <Post key={post._id} {...post} />
+            ))}
         </div>
     );
 };

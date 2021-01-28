@@ -11,12 +11,14 @@ const mongoose = require('mongoose');
 // @access    Private
 exports.createPost = async (req, res) => {
     try {
-        const { title, body } = req.body;
+        const { title, body, imageUrl } = req.body;
+        console.log(req.body);
         const owner = req.session.user_id;
         const username = req.session.username;
-        if (!title || !body) throw new HttpError(400, 'Please fill all fields');
+        if (!title || !body || !imageUrl)
+            throw new HttpError(400, 'Please fill all fields');
 
-        const post = new Post({ title, body, owner, username });
+        const post = new Post({ title, body, imageUrl, owner, username });
         await post.save();
 
         res.redirect('/api/v1/dashboard');

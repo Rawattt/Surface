@@ -86,6 +86,14 @@ const FullPost = () => {
                     <div className='card-body'>
                         <h4 className='card-title'>{user.fullPost.title}</h4>
                         <h5 className='card-text'>{user.fullPost.body}</h5>
+                        <img
+                            src={
+                                user.fullPost.imageUrl ||
+                                'https://images.unsplash.com/photo-1609678816248-132228a8658b?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=750&q=80'
+                            }
+                            className='card-img-top'
+                            alt='User Post'
+                        ></img>
                         <h6>
                             By{' '}
                             <Link to={`/profile/${user.fullPost.owner}`}>

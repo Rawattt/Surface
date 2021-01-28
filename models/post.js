@@ -11,6 +11,9 @@ const postSchema = mongoose.Schema({
         required: [true, 'Post body cannot be empty'],
         maxlength: [100, 'Post body cannot be more than 30 characters']
     },
+    imageUrl: {
+        type: String
+    },
     datetime: {
         type: Date,
         default: new Date()
